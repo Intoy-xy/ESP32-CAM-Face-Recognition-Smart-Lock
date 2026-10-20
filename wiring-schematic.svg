@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+  <title id="title">ESP32-CAM Smart Lock wiring schematic</title>
+  <desc id="desc">Functional wiring diagram based on the firmware: ESP32-CAM, shared I2C OLED and keypad expander, buzzer, L298N solenoid driver, buck supply, USB serial adapter, and laptop over Wi-Fi. Solenoid supply details are marked for verification.</desc>
+  <defs>
+    <style>
+      text { font-family: Segoe UI, Arial, sans-serif; fill: #182230; }
+      .title { font-size: 30px; font-weight: 700; }
+      .subtitle { font-size: 15px; fill: #526174; }
+      .head { font-size: 18px; font-weight: 700; }
+      .label { font-size: 15px; }
+      .small { font-size: 13px; fill: #435267; }
+      .tiny { font-size: 11px; fill: #526174; }
+      .card { fill: #fff; stroke: #b7c2cf; stroke-width: 2; rx: 14; }
+      .esp { fill: #e9f3ff; stroke: #4785c5; stroke-width: 3; rx: 18; }
+      .power { fill: #fff5d9; stroke: #ca9a22; stroke-width: 2; rx: 12; }
+      .unknown { fill: #fff1ed; stroke: #cb6c53; stroke-width: 2; stroke-dasharray: 8 6; rx: 12; }
+      .wire-sig { fill: none; stroke: #2867a5; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .wire-i2c { fill: none; stroke: #7a55a2; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .wire-p5 { fill: none; stroke: #d47b26; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .wire-3v3 { fill: none; stroke: #bd8d18; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .wire-gnd { fill: none; stroke: #45505e; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .wire-serial { fill: none; stroke: #26836c; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .wire-wifi { fill: none; stroke: #66819d; stroke-width: 3; stroke-dasharray: 9 7; }
+      .dot { stroke: white; stroke-width: 2; }
+      .divider { stroke: #dbe2e9; stroke-width: 1.5; }
+      .callout { fill: #f7f9fc; stroke: #d0d9e3; stroke-width: 1.5; rx: 10; }
+    </style>
+  </defs>
+  <rect width="1600" height="1120" fill="#f4f7fa"/>
+  <text x="48" y="52" class="title">ESP32-CAM Smart Lock — Wiring Schematic</text>
+  <text x="48" y="80" class="subtitle">Firmware-derived signal wiring. Power and driver terminals marked “verify” need comparison with the actual modules before finalizing.</text>
+
+  <!-- Wires behind component cards -->
+  <!-- Shared I2C nets -->
+  <path class="wire-i2c" d="M500 380 H438 V324 H390"/>
+  <path class="wire-i2c" d="M438 380 V514 H390"/>
+  <path class="wire-i2c" d="M500 414 H455 V351 H390"/>
+  <path class="wire-i2c" d="M455 414 V544 H390"/>
+  <!-- Buzzer signal -->
+  <path class="wire-sig" d="M1060 454 H1095 V210 H1160"/>
+  <!-- Solenoid driver signal/control -->
+  <path class="wire-sig" d="M1060 494 H1088 V479 H1115"/>
+  <!-- Buck 5V to the ESP32 and the L298N enable input (per code comment). -->
+  <path class="wire-p5" d="M805 168 H1080 V606 H1060"/>
+  <path class="wire-p5" d="M1080 539 H1115"/>
+  <!-- I2C modules powered from ESP32 3V3, with common ground. -->
+  <path class="wire-3v3" d="M500 670 H470 V378 H390 M470 670 V624 H390"/>
+  <path class="wire-gnd" d="M500 636 H485 V389 H390 M485 636 V637 H390"/>
+  <!-- Separate lock supply into motor rail -->
+  <path class="wire-p5" d="M1300 262 V330 H1260 V398" stroke-dasharray="9 7"/>
+  <!-- UART serial: crossed TX/RX + ground; VCC deliberately omitted -->
+  <path class="wire-serial" d="M500 532 H420 V188 H390"/>
+  <path class="wire-serial" d="M500 562 H410 V216 H390"/>
+  <path class="wire-gnd" d="M500 636 H475 V240 H390"/>
+  <!-- L298N outputs to lock -->
+  <path class="wire-sig" d="M1515 569 H1550 V727 H1490"/>
+  <path class="wire-sig" d="M1515 599 H1530 V758 H1490"/>
+  <!-- Wi-Fi runtime link -->
+  <path class="wire-wifi" d="M1032 718 C1080 790 1090 900 1132 936"/>
+
+  <!-- ESP32-CAM -->
+  <rect x="500" y="238" width="560" height="480" class="esp"/>
+  <text x="530" y="276" class="head">AI-Thinker ESP32-CAM</text>
+  <text x="530" y="301" class="small">Camera module attached by ribbon to board socket</text>
+  <rect x="850" y="254" width="180" height="42" fill="#d4e8fb" stroke="#7aa5cf" rx="8"/>
+  <text x="866" y="280" class="small">OV2640 camera</text>
+  <line x1="530" y1="315" x2="1030" y2="315" class="divider"/>
+  <text x="530" y="345" class="small" font-weight="700">Firmware pin assignments</text>
+  <text x="530" y="382" class="label">GPIO13  SDA</text>
+  <text x="530" y="416" class="label">GPIO14  SCL</text>
+  <text x="530" y="454" class="label">GPIO12  Buzzer output</text>
+  <text x="530" y="494" class="label">GPIO15  L298N IN1</text>
+  <text x="530" y="532" class="label">GPIO1 / U0TXD  → adapter RX</text>
+  <text x="530" y="562" class="label">GPIO3 / U0RXD  ← adapter TX</text>
+  <text x="530" y="606" class="label">5V  ← buck converter</text>
+  <text x="530" y="642" class="label">GND  common reference</text>
+  <text x="530" y="670" class="small">3V3 out → OLED + keypad logic (verify module)</text>
+  <text x="530" y="700" class="small">AP: SmartLock-Cam • Face processing runs on laptop</text>
+
+  <!-- USB UART -->
+  <rect x="55" y="125" width="335" height="125" class="card"/>
+  <text x="78" y="158" class="head">CH340 USB-to-serial</text>
+  <text x="78" y="188" class="label">RXD ← ESP32 U0TXD / GPIO1</text>
+  <text x="78" y="216" class="label">TXD → ESP32 U0RXD / GPIO3</text>
+  <text x="78" y="240" class="small">GND ↔ common • leave VCC disconnected</text>
+
+  <!-- OLED -->
+  <rect x="55" y="260" width="335" height="135" class="card"/>
+  <text x="78" y="293" class="head">SSD1306 OLED, I²C 0x3C</text>
+  <text x="78" y="324" class="label">SDA ← GPIO13</text>
+  <text x="78" y="351" class="label">SCL ← GPIO14</text>
+  <text x="78" y="378" class="small">VCC ← ESP32 3V3 • GND common</text>
+
+  <!-- Keypad -->
+  <rect x="55" y="450" width="335" height="202" class="card"/>
+  <text x="78" y="483" class="head">PCF8574 keypad expander, 0x20</text>
+  <text x="78" y="514" class="label">SDA ← GPIO13 • SCL ← GPIO14</text>
+  <text x="78" y="544" class="small">P7, P6, P5, P4 → keypad rows 1–4</text>
+  <text x="78" y="572" class="small">P3, P2, P1, P0 → keypad columns 1–4</text>
+  <text x="78" y="612" class="small">VCC ← ESP32 3V3 • GND common</text>
+  <text x="78" y="637" class="tiny">Confirm expander board supports 3.3V operation.</text>
+
+  <!-- 5V supply -->
+  <rect x="500" y="104" width="305" height="100" class="power"/>
+  <text x="522" y="138" class="head">Buck converter output</text>
+  <text x="522" y="168" class="label">+5V → ESP32 5V / L298N ENA*</text>
+  <text x="522" y="192" class="small">GND → shared ground</text>
+
+  <!-- Buzzer -->
+  <rect x="1160" y="145" width="355" height="122" class="card"/>
+  <text x="1184" y="179" class="head">Buzzer</text>
+  <text x="1184" y="210" class="label">Signal / + ← GPIO12 (active HIGH)</text>
+  <text x="1184" y="239" class="small">Return to GND; driver type/current not specified</text>
+
+  <!-- Lock supply -->
+  <rect x="1160" y="300" width="355" height="78" class="unknown"/>
+  <text x="1184" y="333" class="head">Solenoid supply — VERIFY</text>
+  <text x="1184" y="360" class="small">Use solenoid-rated supply; voltage/current unknown</text>
+
+  <!-- L298N -->
+  <rect x="1115" y="398" width="400" height="245" class="card"/>
+  <text x="1140" y="432" class="head">L298N driver module</text>
+  <line x1="1140" y1="448" x2="1490" y2="448" class="divider"/>
+  <text x="1140" y="479" class="label">IN1 ← GPIO15 (HIGH = unlock)</text>
+  <text x="1140" y="509" class="label">IN2 → GND (per firmware comment)</text>
+  <text x="1140" y="539" class="label">ENA ← +5V logic HIGH / enabled*</text>
+  <text x="1140" y="569" class="label">OUT1, OUT2 → solenoid</text>
+  <text x="1140" y="599" class="small">VS ← rated solenoid supply • GND common</text>
+  <text x="1140" y="627" class="tiny">ENA/module jumper details depend on exact board.</text>
+
+  <!-- Solenoid -->
+  <rect x="1240" y="690" width="250" height="105" class="unknown"/>
+  <text x="1264" y="725" class="head">Solenoid / strike</text>
+  <text x="1264" y="755" class="label">Rated voltage: verify label</text>
+  <text x="1264" y="780" class="small">Wired across L298N OUT1/OUT2*</text>
+
+  <!-- Laptop -->
+  <rect x="1115" y="875" width="400" height="130" class="card"/>
+  <text x="1140" y="911" class="head">Laptop running FaceLock.exe</text>
+  <text x="1140" y="941" class="label">Connect to ESP32-CAM Wi-Fi access point</text>
+  <text x="1140" y="970" class="small">HTTP status + MJPEG stream + authenticated unlock</text>
+
+  <!-- Wiring notes -->
+  <rect x="55" y="760" width="990" height="245" class="callout"/>
+  <text x="82" y="800" class="head">Power and connection notes</text>
+  <text x="82" y="836" class="label">• Keep the buck converter powering the ESP32-CAM during normal use.</text>
+  <text x="82" y="868" class="label">• During normal operation, laptop ↔ ESP32 is Wi-Fi; USB-to-serial is only for flashing/debug.</text>
+  <text x="82" y="900" class="label">• Never connect CH340 VCC and buck +5V to the ESP32 at the same time.</text>
+  <text x="82" y="932" class="label">• Tie grounds together for UART and L298N logic reference.</text>
+  <text x="82" y="964" class="label">• ESP32 GPIOs are 3.3V logic; do not pull I²C lines up to 5V.</text>
+  <text x="82" y="990" class="small">*L298N ENA/5V and output terminal details are inferred from comments; verify the actual module wiring.</text>
+
+  <!-- Connections -->
+  <circle cx="438" cy="380" r="6" fill="#7a55a2" class="dot"/>
+  <circle cx="455" cy="414" r="6" fill="#7a55a2" class="dot"/>
+  <circle cx="470" cy="362" r="6" fill="#bd8d18" class="dot"/>
+  <circle cx="485" cy="334" r="6" fill="#45505e" class="dot"/>
+
+  <!-- Legend -->
+  <line x1="58" y1="1065" x2="105" y2="1065" class="wire-sig"/><text x="116" y="1071" class="small">digital signal</text>
+  <line x1="270" y1="1065" x2="317" y2="1065" class="wire-i2c"/><text x="328" y="1071" class="small">I²C</text>
+  <line x1="415" y1="1065" x2="462" y2="1065" class="wire-p5"/><text x="473" y="1071" class="small">5V / load supply</text>
+  <line x1="640" y1="1065" x2="687" y2="1065" class="wire-gnd"/><text x="698" y="1071" class="small">ground</text>
+  <line x1="810" y1="1065" x2="857" y2="1065" class="wire-serial"/><text x="868" y="1071" class="small">UART</text>
+  <line x1="980" y1="1065" x2="1027" y2="1065" class="wire-wifi"/><text x="1038" y="1071" class="small">Wi-Fi</text>
+  <text x="1160" y="1071" class="tiny">Based on FaceRecognition/src/main.cpp and README</text>
+</svg>

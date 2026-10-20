@@ -1,0 +1,12 @@
+.pio/
+.uv-cache/
+.venv/
+build/
+dist/
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+include/secrets.h
+laptop/local_config.py
+**/face_data.npz
+__pycache__/
+*.py[cod]
